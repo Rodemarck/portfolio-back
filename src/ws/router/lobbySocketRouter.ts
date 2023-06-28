@@ -1,10 +1,11 @@
 import {createSocketIoRouter, SocketIoRouter} from "../../helper/socket/SocketIORouter.ts";
 import {lobbySocketController as controller} from "../controller/lobbySocketController.ts";
 import {Socket} from "socket.io";
+import {validationSocket} from "../midlewares/validationSocket.ts";
 
 const router:SocketIoRouter = createSocketIoRouter()
 
-router.on('/visibilty',controller.onUserChangeVisibility)
+router.on('/visibilty',validationSocket('sexo2'),controller.onUserChangeVisibility)
 router.on('/room/create',controller.onUserCreteRoom)
 router.on('/room/creating',controller.onUserStartCreateRoom)
 router.on('/room/update',controller.onUserUpdateRoom)

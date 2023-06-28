@@ -1,7 +1,11 @@
 import {Socket} from "socket.io";
+import {logger} from "../../helper/logger.ts";
 
 const onUserMove = async (socket:Socket)=>{}
-const onUserChangeVisibility = async (socket:Socket) =>{}
+const onUserChangeVisibility = async (socket:Socket, data: any  ) =>{
+    logger.debug(socket.id)
+    socket.emit('piq/client/resposta',data)
+}
 const onUserStartCreateRoom = async (socket:Socket) =>{}
 const onUserCreteRoom = async (socket:Socket) =>{}
 const onUserUpdateRoom = async (socket:Socket)=>{}

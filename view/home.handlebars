@@ -1,0 +1,15 @@
+Hello world!
+<script>
+    const socket = io();
+    window.onload = () =>{
+        socket.emit('piq/server/lobby/visibilty',{porra:'gala',parceiro:'sexo'})
+        socket.on('piq/client/resposta',msg=>{
+            console.log(msg)
+        })
+
+        socket.on('piq/client/erro',msg=>{
+            console.log('deu erro nessa merda, eu sei...')
+            console.log(msg)
+        })
+    }
+</script>

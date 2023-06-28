@@ -2,18 +2,10 @@ import Validator from 'validatorjs';
 import {DB} from "../../database/db.ts";
 import {NextFunction} from "express";
 import {TypedRequest} from "../../helper/typedRequest.ts";
-import {loggerErr} from "../../helper/logger.ts";
+import {logger, loggerErr} from "../../helper/logger.ts";
 import {returnJson} from "../../helper/http/returnJson.ts";
+import {Regra, Regras} from "../../helper/regras.ts";
 
-interface Regra{
-    fields:string[][],
-    rules:{
-        [fieldName:string]:string
-    }
-}
-interface Regras{
-    [field:string]:Regra;
-};
 
 const regras_validacao:Regras = {
     login:{
@@ -22,10 +14,18 @@ const regras_validacao:Regras = {
             login : 'required|string|between:4,64',
             password : 'required|string|between:3,64|regex:/^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$/'
         }
+    },
+    register:{
+        fields:[['body','login'],['body','password'],['body','email']],
+        rules:{
+            login:'required|string|between:4,64',
+            password:'required|string|between:4,64',
+            email:'required|email'
+        }
     }
 }
 
-const traducao = {
+export const traducao = {
     required:'O campo :attribute é obrigatorio.',
     string:'O campo :attribute precisa ser do tipo texto',
     numeric:'O campo :attribute precisa ser do tipo numérico',
@@ -33,14 +33,14 @@ const traducao = {
 }
 
 
-const recupera_erros = (validator:Validator.Validator<any>) => {
+export const recupera_erros = (validator:Validator.Validator<any>) => {
     let erros:{[key:string]:any} = {}
     for (let erro in validator.errors.errors) {
         erros[erro] = validator.errors.first(erro);
     }
     return erros;
 }
-const recupera_dados = (campos:string[][],req:any) => {
+export const recupera_dados = (campos:string[][],req:any) => {
     let dados:{[field:string]:any} = {}
     for (let i = 0; i < campos.length; i++) {
         switch (campos[i][0]) {
@@ -49,6 +49,9 @@ const recupera_dados = (campos:string[][],req:any) => {
                 break
             case 'query':
                 dados[campos[i][1]] = req.query[campos[i][1]]
+                break
+            default:
+                dados[campos[i][0]] = req[campos[i][0]]
         }
     }
     return dados
@@ -66,7 +69,7 @@ export const validation = (...regras:string[]) => {
         }
     }
 
-    return (req:Request, res:Response, next:NextFunction) => {
+    return (req:any, res:any, next:NextFunction) => {
 
         let regras :{[key:string]:string}={}
         Object.values(conjunto_regras)
