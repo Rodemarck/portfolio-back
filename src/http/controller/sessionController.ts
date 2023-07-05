@@ -1,4 +1,4 @@
-import {DB} from "../../database/db.ts";
+import {db} from "../../database/db.ts";
 import bcrypt from "bcrypt";
 import {TypedRequest} from "../../helper/typedRequest.ts";
 import {returnJson} from "../../helper/http/returnJson.ts";
@@ -11,7 +11,7 @@ interface Login {
 };
 const formLogin = async (req:any, res:any) =>{}
 const executeLogin = async (req:any, res:any) =>{
-    let user = await DB().models.User.findOne({
+    let user = await db.models.User.findOne({
         where:{
             login:req.body.username
         }

@@ -1,10 +1,8 @@
+
+
 import express from 'express'
 import cors from 'cors';
 import cookieParser from "cookie-parser";
-import dotenv from 'dotenv'
-import RedisStore from "connect-redis"
-import session from "express-session"
-import {createClient} from "redis"
 import router from "./http/router/router.ts";
 
 import * as http from "http";
@@ -17,11 +15,12 @@ import {initSession} from "./initSession.ts";
 
 
 
-dotenv.config()
+//dotenv.config()
 const __db  =initDatabase()
 const app = express();
 
-initSession(app)
+//redis
+//initSession(app)
 
 app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');

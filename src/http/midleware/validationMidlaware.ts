@@ -1,5 +1,5 @@
 import Validator from 'validatorjs';
-import {DB} from "../../database/db.ts";
+import {db} from "../../database/db.ts";
 import {NextFunction} from "express";
 import {TypedRequest} from "../../helper/typedRequest.ts";
 import {logger, loggerErr} from "../../helper/logger.ts";
